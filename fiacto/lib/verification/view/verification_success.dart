@@ -1,5 +1,6 @@
 import 'package:common/common.dart';
 import 'package:fiacto/dashboard/view/view.dart';
+import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class VerficationSuccess extends StatelessWidget {
@@ -8,7 +9,7 @@ class VerficationSuccess extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBarWidget(
         title: 'Verification',
         centerTitle: true,
         showLeading: true,
@@ -51,7 +52,7 @@ class _ContinueButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const DashboardPage()),
+          MaterialPageRoute(builder: (_) => DashboardPage()),
         );
       },
     );

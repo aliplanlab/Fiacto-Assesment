@@ -471,7 +471,7 @@ class DrawerCustomAppBar extends StatelessWidget
   final VoidCallback onDrawerTap;
   final VoidCallback onNotificationTap;
   final VoidCallback onProfileTap;
-  final Widget? titleWidget; // can be Text or Image or anything
+  final Widget? titleWidget;
 
   const DrawerCustomAppBar({
     super.key,
@@ -483,44 +483,38 @@ class DrawerCustomAppBar extends StatelessWidget
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 1,
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: titleWidget ?? const SizedBox(),
-        leading: GestureDetector(
-          onTap: onDrawerTap,
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: AssetIcon.multicolor(AssetIcons.drawer, size: 30),
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 1,
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+      title: titleWidget ?? const SizedBox(),
+      leading: GestureDetector(
+        onTap: onDrawerTap,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: AssetIcon.multicolor(AssetIcons.drawer, size: 30),
+        ),
+      ),
+      actions: [
+        IconButton(
+          onPressed: onNotificationTap,
+          icon: CircleAvatar(
+            radius: 16,
+            backgroundColor: Colors.white,
+            child: AssetIcon.multicolor(AssetIcons.alert, size: 50),
           ),
         ),
-
-        actions: [
-          IconButton(
-            onPressed: onNotificationTap,
-            icon: CircleAvatar(
-              radius: 16,
-              backgroundColor: Colors.white,
-              child: Container(
-                child: AssetIcon.multicolor(AssetIcons.alert, size: 50),
-              ),
-            ),
+        const SizedBox(width: 4),
+        GestureDetector(
+          onTap: onProfileTap,
+          child: const CircleAvatar(
+            radius: 18,
+            backgroundImage: AssetImage('assets/images/avatar.png'),
           ),
-          const SizedBox(width: 4),
-          GestureDetector(
-            onTap: onProfileTap,
-            child: const CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage('assets/images/avatar.png'),
-            ),
-          ),
-          const SizedBox(width: 12),
-        ],
-      ),
+        ),
+        const SizedBox(width: 12),
+      ],
     );
   }
 

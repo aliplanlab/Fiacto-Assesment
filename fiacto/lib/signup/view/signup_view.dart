@@ -6,8 +6,8 @@ class SignupView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        title: 'Create Your Account',
+      appBar: AppBarWidget(
+        title: 'Verification',
         centerTitle: true,
         showLeading: true,
       ),

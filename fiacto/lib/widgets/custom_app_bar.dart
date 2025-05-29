@@ -1,3 +1,5 @@
+import 'package:common/constants/asset_icons.dart';
+import 'package:common/widgets/asset_icon.dart';
 import 'package:flutter/material.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
@@ -35,17 +37,20 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                 child: GestureDetector(
                   onTap: onBack ?? () => Navigator.of(context).maybePop(),
                   child: Container(
-                    height: 36,
-                    width: 36,
+                    height: 40,
+                    width: 50,
                     decoration: BoxDecoration(
+                      shape:
+                          BoxShape.circle, // 💫 This makes it perfectly round
                       border: Border.all(color: Colors.grey.shade300, width: 1),
-                      shape: BoxShape.rectangle,
-                      borderRadius: BorderRadius.circular(50),
+                      color: Colors.white,
                     ),
-                    child: const Icon(
-                      Icons.arrow_back_ios_new,
-                      size: 18,
-                      color: Colors.black,
+                    child: Center(
+                      child: AssetIcon.monotone(
+                        AssetIcons.arrow_left,
+                        color: Colors.black,
+                        size: 20, // optional size tweak
+                      ),
                     ),
                   ),
                 ),

@@ -131,10 +131,18 @@ class CustomBackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _PopButton(
-      icon: AssetIcons.arrow_left,
-      tooltio: MaterialLocalizations.of(context).backButtonTooltip,
-      onPressed: onPressed,
+    return Container(
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.grey.shade300, width: 1),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(100),
+      ),
+      child: _PopButton(
+        icon: AssetIcons.arrow_left,
+        tooltio: MaterialLocalizations.of(context).backButtonTooltip,
+        onPressed: onPressed,
+      ),
     );
   }
 }

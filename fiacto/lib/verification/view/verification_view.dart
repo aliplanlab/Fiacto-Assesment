@@ -1,5 +1,6 @@
 import 'package:common/common.dart';
 import 'package:fiacto/verification/view/verification_success.dart';
+import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:fiacto/widgets/custom_pinput.dart';
 import 'package:flutter/material.dart';
 
@@ -9,7 +10,7 @@ class VerficationView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: AppBarWidget(
         title: 'Verification',
         centerTitle: true,
         showLeading: true,
