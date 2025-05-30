@@ -6,7 +6,7 @@ import 'package:common/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 enum AssetImages {
-  splash_background,
+  splash,
   ;
 
   // ignore: unused_element_parameter
@@ -14,7 +14,7 @@ enum AssetImages {
   final AssetImageFormat format;
 
   static Future<void> preloadLogoBackground() =>
-      preloadImage(AssetImages.splash_background());
+      preloadImage(AssetImages.splash());
 }
 
 enum AssetImageFormat {

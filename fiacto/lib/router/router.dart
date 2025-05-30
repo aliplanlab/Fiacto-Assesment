@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:common/common.dart';
 import 'package:fiacto/app/bloc/app_bloc.dart';
 import 'package:fiacto/main_screen.dart';
 import 'package:fiacto/onboarding/view/view.dart';
@@ -50,21 +51,21 @@ class AppRouter {
                    }
 
                    //  // if the user is not logged in, they must login
-                   //  final loggedIn = appState.isAuthenticated;
-                   //  final isOnboared = await appBloc.authRepository.onboarding;
-                   //  final loggingIn = state.matches(OnBoardingPage.route());
-                   //  if (!loggedIn) {
-                   //    if (loggingIn) {
-                   //      return null;
-                   //    }
-                   //    if (isOnboared) {
-                   //      //  final signup =
-                   //      //      state.matches(SignUpPage.route()) ||
-                   //      //      state.matches(AccountVerificationPage.route());
-                   //      //  return LoginPage.route();
-                   //    }
-                   //    return OnBoardingPage.route();
-                   //  }
+                   final loggedIn = appState.isAuthenticated;
+                   final isOnboared = await appBloc.authRepository.onboarding;
+                   final loggingIn = state.matches(OnBoardingPage.route());
+                   if (!loggedIn) {
+                     if (loggingIn) {
+                       return null;
+                     }
+                     if (isOnboared) {
+                       //  final signup =
+                       //      state.matches(SignUpPage.route()) ||
+                       //      state.matches(AccountVerificationPage.route());
+                       //  return LoginPage.route();
+                     }
+                     return OnBoardingPage.route();
+                   }
 
                    // // - [loading] if the user is loaded but still on the splash page,
                    // redirect to the home page
@@ -95,7 +96,7 @@ class AppRouter {
                    //   if (state.matches('/tab')) {
                    //     return null;
                    //   }
-                  //  return TabPage.routeWithFirstTab();
+                   //  return TabPage.routeW/ithFirstTab();
                  }
                  // no need to redirect at all
                  // return null;
