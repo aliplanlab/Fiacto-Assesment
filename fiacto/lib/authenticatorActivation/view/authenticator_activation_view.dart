@@ -1,8 +1,11 @@
 import 'package:common/common.dart';
+import 'package:fiacto/authenticatorActivation/cubit/authenticator_activation_cubit.dart';
 import 'package:fiacto/authenticatorActivation/view/verification_success.dart';
 import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:fiacto/widgets/custom_pinput.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 class AuthenticatorActivationView extends StatelessWidget {
   const AuthenticatorActivationView({super.key});
@@ -51,12 +54,21 @@ class _VerifyAndEnableButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomElevatedButton.expanded(
-      text: 'Verify & Enable 2FA',
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const VerficationSuccess()),
+    return BlocBuilder<
+      AuthenticatorActivationCubit,
+      AuthenticatorActivationState
+    >(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return CustomElevatedButton.expanded(
+          text: 'Verify & Enable 2FA',
+          enabled: state.status.isValidated,
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const VerficationSuccess()),
+            );
+          },
         );
       },
     );

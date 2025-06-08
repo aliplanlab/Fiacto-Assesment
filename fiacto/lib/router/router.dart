@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:common/common.dart';
+import 'package:fiacto/2FA/view/view.dart';
 import 'package:fiacto/app/bloc/app_bloc.dart';
 import 'package:fiacto/login/view/view.dart';
 import 'package:fiacto/onboarding/view/view.dart';
@@ -95,7 +96,7 @@ class AppRouter {
                      if (state.matches('/tab')) {
                        return null;
                      }
-                     return TabPage.routeWithFirstTab();
+                     return TwoFAWalletPage.route();
                    }
                    return null;
                  }

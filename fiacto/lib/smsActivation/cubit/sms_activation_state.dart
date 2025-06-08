@@ -6,28 +6,38 @@ class SmsActivationState extends Equatable {
   final PhoneNumber phoneNumber;
   final String otp;
   final FormzStatus status;
+  final String countryCode;
 
   const SmsActivationState({
     required this.selectedCountry,
     this.phoneNumber = const PhoneNumber.pure(),
     this.otp = '',
     this.status = FormzStatus.pure,
+    this.countryCode = '',
   });
   @override
   // TODO: implement props
-  List<Object?> get props => [selectedCountry, phoneNumber, otp, status];
+  List<Object?> get props => [
+    selectedCountry,
+    phoneNumber,
+    otp,
+    status,
+    countryCode,
+  ];
 
   SmsActivationState copyWith({
     Country? selectedCountry,
     PhoneNumber? phoneNumber,
     String? otp,
     FormzStatus? status,
+    String? countryCode,
   }) {
     return SmsActivationState(
       selectedCountry: selectedCountry ?? this.selectedCountry,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       otp: otp ?? this.otp,
       status: status ?? this.status,
+      countryCode: countryCode ?? this.countryCode,
     );
   }
 }

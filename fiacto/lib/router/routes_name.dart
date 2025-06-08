@@ -9,4 +9,6 @@ class RouteNames {
   static const String inspection = 'Inspection';
   static const String training = 'Training';
   static const String evaluation = 'Evaluation';
+    static const String twoFA = '2FA';
+
 }

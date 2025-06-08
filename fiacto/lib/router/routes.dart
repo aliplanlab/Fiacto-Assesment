@@ -29,6 +29,11 @@ class AppRoutes {
       builder: (_, __) => const SignUpPage(),
     ),
     GoRoute(
+      path: TwoFAWalletPage.route(),
+      name: RouteNames.twoFA,
+      builder: (_, __) => const TwoFAWalletPage(),
+    ),
+    GoRoute(
       path: TabPage.path(),
       builder:
           (_, state) =>

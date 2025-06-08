@@ -29,7 +29,7 @@ class SmsActivationCubit extends Cubit<SmsActivationState> {
     emit(state.copyWith(selectedCountry: country));
   }
 
-  void phoneNumber(String value) {
+  void changePhoneNumber(String value) {
     final phoneNumber = PhoneNumber.dirty(value);
     emit(
       state.copyWith(
