@@ -5,6 +5,15 @@ class SecureWalletView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const _BodyView();
+  }
+}
+
+class _BodyView extends StatelessWidget {
+  const _BodyView();
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: CustomAppBar(
         title: 'Secure Your Wallet',
@@ -51,7 +60,9 @@ class _SMSVerificationButton extends StatelessWidget {
     return CustomOutlinedButton.expanded(
       text: 'SMS Verification',
       borderRadius: 10,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => const VerficiationPage()));
+      },
     );
   }
 }

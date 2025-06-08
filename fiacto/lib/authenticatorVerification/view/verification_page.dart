@@ -1,4 +1,4 @@
-import 'package:fiacto/verification/view/verification_view.dart';
+import 'package:fiacto/authenticatorVerification/view/verification_view.dart';
 import 'package:flutter/material.dart';
 
 class VerficiationPage extends StatelessWidget {
