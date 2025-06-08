@@ -1,11 +1,11 @@
 import 'package:common/common.dart';
-import 'package:fiacto/authenticatorVerification/view/verification_success.dart';
+import 'package:fiacto/authenticatorActivation/view/verification_success.dart';
 import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:fiacto/widgets/custom_pinput.dart';
 import 'package:flutter/material.dart';
 
-class VerficationView extends StatelessWidget {
-  const VerficationView({super.key});
+class AuthenticatorActivationView extends StatelessWidget {
+  const AuthenticatorActivationView({super.key});
 
   @override
   Widget build(BuildContext context) {

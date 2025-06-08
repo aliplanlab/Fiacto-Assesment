@@ -1,14 +1,14 @@
 import 'package:common/common.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:fiacto/smsVerification/cubit/sms_activation_cubit.dart';
+import 'package:fiacto/smsActivation/cubit/sms_activation_cubit.dart';
 import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SmsVerificationView extends StatelessWidget {
-  const SmsVerificationView({super.key});
+class SmsActivationView extends StatelessWidget {
+  const SmsActivationView({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -195,7 +195,7 @@ class _ContinueButton extends StatelessWidget {
           Future.delayed(const Duration(seconds: 2), () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const SecureWalletPage()),
+              MaterialPageRoute(builder: (_) => const TwoFAWalletView()),
             );
           });
         } else if (state.signUpDataState.isFailure) {

@@ -130,10 +130,10 @@ class _LoginButton extends StatelessWidget {
             context.read<AuthRepository>().updateUser(User.fromEntity(user));
           }
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const VerficiationPage()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (_) => const VerficiationPage()),
+            // );
           });
         } else if (state.loginDataState.isFailure) {
           context.errorSnackbar(state.loginDataState.errorMessage);
