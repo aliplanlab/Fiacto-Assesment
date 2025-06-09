@@ -34,6 +34,16 @@ class AppRoutes {
       builder: (_, __) => const TwoFAWalletPage(),
     ),
     GoRoute(
+      path: AuthenticatorActivationPage.route(),
+      name: RouteNames.authenticatorActivation,
+      builder: (_, __) => const AuthenticatorActivationPage(),
+    ),
+    GoRoute(
+      path: SmsActivationPage.route(),
+      name: RouteNames.smsActivation,
+      builder: (_, __) => const SmsActivationPage(),
+    ),
+    GoRoute(
       path: TabPage.path(),
       builder:
           (_, state) =>

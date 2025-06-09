@@ -30,7 +30,7 @@ class _BodyView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 20),
             Text(
               'Add an Extra Layer of Security',
               style: context.twenty600.withColor(Colors.black),
