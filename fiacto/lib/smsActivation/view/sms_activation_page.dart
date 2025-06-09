@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SmsActivationPage extends StatelessWidget {
   const SmsActivationPage({super.key});
 
+  static String route() => '/sms-activation';
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
