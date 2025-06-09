@@ -1,5 +1,5 @@
 import 'package:common/common.dart';
-import 'package:fiacto/secure_wallet/view/view.dart';
+import 'package:fiacto/2FA/view/view.dart';
 import 'package:fiacto/signup/cubit/signup_cubit.dart';
 import 'package:fiacto/signup/cubit/signup_state.dart';
 import 'package:fiacto/signup/repository/sign_up_repository_imp.dart';

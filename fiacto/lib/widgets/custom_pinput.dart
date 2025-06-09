@@ -1,4 +1,6 @@
+import 'package:fiacto/authenticatorActivation/cubit/authenticator_activation_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:pinput/pinput.dart';
 
 class CustomPinputWidget extends StatelessWidget {
@@ -38,7 +40,7 @@ class CustomPinputWidget extends StatelessWidget {
       submittedPinTheme: submittedPinTheme,
       showCursor: true,
       onCompleted: (pin) {
-        debugPrint('Completed: $pin');
+        context.read<AuthenticatorActivationCubit>().isValidated();
       },
     );
   }

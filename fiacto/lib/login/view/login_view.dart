@@ -42,7 +42,7 @@ class LoginView extends StatelessWidget {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const SignupPage()),
+                      MaterialPageRoute(builder: (_) => const SignUpPage()),
                     );
                   },
                   titleStyle: context.fourteen500.withColor(context.grey500),
@@ -125,11 +125,15 @@ class _LoginButton extends StatelessWidget {
       listener: (context, state) {
         if (state.loginDataState.isLoaded) {
           context.successSnackbar('Login Successfully');
+          final user = state.loginDataState.data;
+          if (user != null && state.loginDataState.data != null) {
+            context.read<AuthRepository>().updateUser(User.fromEntity(user));
+          }
           Future.delayed(const Duration(seconds: 2), () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const VerficiationPage()),
-            );
+            // Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (_) => const VerficiationPage()),
+            // );
           });
         } else if (state.loginDataState.isFailure) {
           context.errorSnackbar(state.loginDataState.errorMessage);

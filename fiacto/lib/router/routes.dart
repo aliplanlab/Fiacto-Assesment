@@ -18,7 +18,21 @@ class AppRoutes {
       path: OnBoardingPage.route(),
       builder: (_, __) => const OnBoardingPage(),
     ),
-
+    GoRoute(
+      path: LoginPage.route(),
+      name: RouteNames.login,
+      builder: (_, __) => const LoginPage(),
+    ),
+    GoRoute(
+      path: SignUpPage.route(),
+      name: RouteNames.signup,
+      builder: (_, __) => const SignUpPage(),
+    ),
+    GoRoute(
+      path: TwoFAWalletPage.route(),
+      name: RouteNames.twoFA,
+      builder: (_, __) => const TwoFAWalletPage(),
+    ),
     GoRoute(
       path: TabPage.path(),
       builder:
@@ -103,10 +117,7 @@ class AppRoutes {
   //   path: HomePage.route(),
   //   builder: (_, __) => const HomePage(),
   // ),
-  // GoRoute(
-  //   path: SignUpPage.route(),
-  //   builder: (_, __) => const SignUpPage(),
-  // ),
+
   // GoRoute(
   //   path: VerifyEmailAddressPage.route(),
   //   builder: (_, __) => const VerifyEmailAddressPage(),

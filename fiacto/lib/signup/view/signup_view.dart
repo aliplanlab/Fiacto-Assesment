@@ -188,10 +188,14 @@ class _ContinueButton extends StatelessWidget {
       listener: (context, state) {
         if (state.signUpDataState.isLoaded) {
           context.successSnackbar('User Created Successfully');
+          final user = state.signUpDataState.data;
+          if (user != null && state.signUpDataState.data != null) {
+            context.read<AuthRepository>().updateUser(User.fromEntity(user));
+          }
           Future.delayed(const Duration(seconds: 2), () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const SecureWalletPage()),
+              MaterialPageRoute(builder: (_) => const TwoFAWalletView()),
             );
           });
         } else if (state.signUpDataState.isFailure) {

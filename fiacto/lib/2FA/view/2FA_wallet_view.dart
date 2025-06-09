@@ -1,7 +1,16 @@
 part of 'view.dart';
 
-class SecureWalletView extends StatelessWidget {
-  const SecureWalletView({super.key});
+class TwoFAWalletView extends StatelessWidget {
+  const TwoFAWalletView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const _BodyView();
+  }
+}
+
+class _BodyView extends StatelessWidget {
+  const _BodyView();
 
   @override
   Widget build(BuildContext context) {
@@ -51,7 +60,12 @@ class _SMSVerificationButton extends StatelessWidget {
     return CustomOutlinedButton.expanded(
       text: 'SMS Verification',
       borderRadius: 10,
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => const SmsActivationPage()),
+        );
+      },
     );
   }
 }
@@ -68,7 +82,9 @@ class _AuthAppButton extends StatelessWidget {
       onPressed: () {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (_) => const VerficiationPage()),
+          MaterialPageRoute(
+            builder: (_) => const AuthenticatorActivationPage(),
+          ),
         );
       },
     );

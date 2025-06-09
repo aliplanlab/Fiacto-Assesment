@@ -1,11 +1,9 @@
 import 'package:common/common.dart';
-import 'package:fiacto/verification/view/verification_success.dart';
 import 'package:fiacto/widgets/custom_app_bar.dart';
-import 'package:fiacto/widgets/custom_pinput.dart';
 import 'package:flutter/material.dart';
 
-class VerficationView extends StatelessWidget {
-  const VerficationView({super.key});
+class VerficationSuccess extends StatelessWidget {
+  const VerficationSuccess({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,24 +19,21 @@ class VerficationView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 40),
+            Image.asset('assets/images/success.png'),
+            const SizedBox(height: 24),
             Text(
-              'Enter the 6-Digit Code',
+              '2FA Enabled!',
               style: context.twenty600.withColor(Colors.black),
             ),
-            const SizedBox(height: 8),
-            Text(
-              'Enter the code from your app',
-              style: context.fourteen400.withColor(context.grey500),
-            ),
-            const SizedBox(height: 24),
-            CustomPinputWidget(),
             const SizedBox(height: 24),
             Text(
-              'The code refreshes every 30 seconds 20',
+              textAlign: TextAlign.center,
+              'Your wallet is now protected by two-factor authentication.',
               style: context.fourteen400.withColor(context.grey500),
             ),
+            Spacer(),
+            _ContinueButton(),
             const SizedBox(height: 24),
-            _VerifyAndEnableButton(),
           ],
         ),
       ),
@@ -46,18 +41,18 @@ class VerficationView extends StatelessWidget {
   }
 }
 
-class _VerifyAndEnableButton extends StatelessWidget {
-  const _VerifyAndEnableButton();
+class _ContinueButton extends StatelessWidget {
+  const _ContinueButton();
 
   @override
   Widget build(BuildContext context) {
     return CustomElevatedButton.expanded(
-      text: 'Verify & Enable 2FA',
+      text: 'Continue',
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const VerficationSuccess()),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (_) => MainScreen()),
+        // );
       },
     );
   }

@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:common/common.dart';
+import 'package:fiacto/2FA/view/view.dart';
 import 'package:fiacto/app/bloc/app_bloc.dart';
-import 'package:fiacto/main_screen.dart';
+import 'package:fiacto/login/view/view.dart';
 import 'package:fiacto/onboarding/view/view.dart';
 import 'package:fiacto/router/routes_name.dart';
+import 'package:fiacto/signup/view/view.dart';
 import 'package:fiacto/splash/view/view.dart';
 import 'package:fiacto/tab/view/view.dart';
 import 'package:flutter/material.dart';
@@ -59,10 +61,8 @@ class AppRouter {
                        return null;
                      }
                      if (isOnboared) {
-                       //  final signup =
-                       //      state.matches(SignUpPage.route()) ||
-                       //      state.matches(AccountVerificationPage.route());
-                       //  return LoginPage.route();
+                       final signup = state.matches(SignUpPage.route());
+                       return signup ? null : LoginPage.route();
                      }
                      return OnBoardingPage.route();
                    }
@@ -92,15 +92,14 @@ class AppRouter {
                    //   return CompanyRegistrationPage.route();
                    // }
 
-                   // else if (loading || loggingIn || loggedIn) {
-                   //   if (state.matches('/tab')) {
-                   //     return null;
-                   //   }
-                   //  return TabPage.routeW/ithFirstTab();
+                   if (loading || loggingIn || loggedIn) {
+                     if (state.matches('/tab')) {
+                       return null;
+                     }
+                     return TwoFAWalletPage.route();
+                   }
+                   return null;
                  }
-                 // no need to redirect at all
-                 // return null;
-                 // }/
                  : null,
        );
 

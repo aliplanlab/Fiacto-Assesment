@@ -26,8 +26,8 @@ class _BodyView extends StatelessWidget {
             controller: pageController,
             onPageChanged: (value) => cubit.setPage(value),
             itemCount: onboardController.length,
-            itemBuilder: (context, index) {
-              final item = onboardController[index];
+            itemBuilder: (context, currentIndex) {
+              final item = onboardController[currentIndex];
               return SafeArea(
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -53,7 +53,10 @@ class _BodyView extends StatelessWidget {
                       const SizedBox(height: 40),
                       const BuildDots(),
                       const Spacer(),
-                      NavigationButtons(pageController: pageController),
+                      NavigationButtons(
+                        pageController: pageController,
+                        currentIndex: currentIndex,
+                      ),
                       const SizedBox(height: 40),
                     ],
                   ),
@@ -95,19 +98,29 @@ class BuildDots extends StatelessWidget {
 }
 
 class NavigationButtons extends StatelessWidget {
-  const NavigationButtons({super.key, required this.pageController});
+  const NavigationButtons({
+    super.key,
+    required this.pageController,
+    required this.currentIndex,
+  });
 
   final PageController pageController;
+  final int currentIndex;
   @override
   Widget build(BuildContext context) {
+    final onboardingItems = OnboardingModel.onboardingItems;
+
     return Column(
       children: [
         CustomElevatedButton.expanded(
           onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginPage()),
-            );
+            if (currentIndex == onboardingItems.length - 1){
+               context.read<AuthRepository>().updateOnboarding(true);
+            }
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const LoginPage()),
+              );
           },
           text: 'Login',
         ),
@@ -118,7 +131,7 @@ class NavigationButtons extends StatelessWidget {
           onTap: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (_) => const SignupPage()),
+              MaterialPageRoute(builder: (_) => const SignUpPage()),
             );
           },
           titleStyle: context.fourteen500.withColor(context.grey500),

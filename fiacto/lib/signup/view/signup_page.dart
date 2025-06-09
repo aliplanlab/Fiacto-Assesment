@@ -1,7 +1,7 @@
 part of 'view.dart';
 
-class SignupPage extends StatelessWidget {
-  const SignupPage({super.key});
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key});
 
   static String route() => '/sign_up';
 
