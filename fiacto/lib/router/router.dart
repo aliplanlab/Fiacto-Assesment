@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:common/common.dart';
 import 'package:fiacto/2FA/view/view.dart';
 import 'package:fiacto/app/bloc/app_bloc.dart';
+import 'package:fiacto/authenticatorActivation/view/authenticator_activation_page.dart';
 import 'package:fiacto/login/view/view.dart';
 import 'package:fiacto/onboarding/view/view.dart';
 import 'package:fiacto/router/routes_name.dart';
 import 'package:fiacto/signup/view/view.dart';
+import 'package:fiacto/smsActivation/view/sms_activation_page.dart';
 import 'package:fiacto/splash/view/view.dart';
 import 'package:fiacto/tab/view/view.dart';
 import 'package:flutter/material.dart';
@@ -75,28 +77,18 @@ class AppRouter {
                    // page, redirect to the home page
                    final user = appState.user;
 
-                   // if (user.isEmailVerified == false) {
-                   //   return VerifyEmailAddressPage.route();
-                   // } else if (!(user.isTwoFactorPhoneComplete ||
-                   //     user.isTwoFactorAuthenticatorComplete)) {
-                   //   return MFAOptionsPage.route();
-                   // } else if (user.status == 'is_created') {
-                   //   return TabPage.routeWithFirstTab();
-                   // }
-                   // if (!(user.isProfileCompleted ||
-                   //     user.isUserAgreementComplete)) {
-                   //   return ProfilePage.route();
-                   // } else if (!user.isUserAgreementComplete) {
-                   //   return UserAgreementPage.route();
-                   // } else if (!user.isUserRegistrationComplete) {
-                   //   return CompanyRegistrationPage.route();
-                   // }
+                   //  if (user.isEmailVerified == false) {
+                   //    return VerifyEmailAddressPage.route();
+                   //  } else
 
-                   if (loading || loggingIn || loggedIn) {
+                   if (!
+                   (user.isTwoFactorPhoneComplete ||user.isTwoFactorAuthenticatorComplete)) {
+                     return TwoFAWalletPage.route();
+                   } else if (loading || loggingIn || loggedIn) {
                      if (state.matches('/tab')) {
                        return null;
                      }
-                     return TwoFAWalletPage.route();
+                     return TabPage.routeWithFirstTab();
                    }
                    return null;
                  }

@@ -46,10 +46,9 @@ class AppFeatureProviders extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return
-    // MultiBlocProvider(
-    //   providers: const [AuthProvider()],
-    // child:
-    const AppView();
+    return MultiBlocProvider(
+      providers: const [AuthProvider()],
+      child: AppView(),
+    );
   }
 }
