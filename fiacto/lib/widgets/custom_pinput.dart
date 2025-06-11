@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
 class CustomPinputWidget extends StatelessWidget {
-  const CustomPinputWidget({super.key, this.onChanged, this.onCompleted});
+  const CustomPinputWidget({
+    super.key,
+    this.onChanged,
+    this.onCompleted,
+    required this.length,
+  });
 
   final void Function(String)? onChanged;
   final void Function(String)? onCompleted;
+  final int length;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +41,7 @@ class CustomPinputWidget extends StatelessWidget {
       ),
     );
     return Pinput(
-      length: 6,
+      length: length,
       defaultPinTheme: defaultPinTheme,
       focusedPinTheme: focusedPinTheme,
       submittedPinTheme: submittedPinTheme,

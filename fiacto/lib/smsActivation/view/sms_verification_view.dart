@@ -1,6 +1,7 @@
 import 'package:common/common.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:fiacto/smsActivation/cubit/sms_activation_cubit.dart';
+import 'package:fiacto/smsActivation/view/otp_verification.dart';
 import 'package:fiacto/widgets/custom_app_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -191,16 +192,38 @@ class _SendCodeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SmsActivationCubit, SmsActivationState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return CustomElevatedButton.expanded(
-          text: 'Send Code',
-          
-          enabled: state.status.isValidated,
-          onPressed: () {},
-        );
+    return BlocListener<SmsActivationCubit, SmsActivationState>(
+      listenWhen:
+          (previous, current) => previous.sendOTPState != current.sendOTPState,
+      listener: (context, state) {
+        if (state.sendOTPState.isLoaded) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder:
+                  (_) => OtpVerification(
+                    cubit: context.read<SmsActivationCubit>(),
+                  ),
+            ),
+          );
+        }
       },
+      child: BlocBuilder<SmsActivationCubit, SmsActivationState>(
+        buildWhen:
+            (previous, current) =>
+                previous.status != current.status ||
+                previous.sendOTPState != current.sendOTPState,
+        builder: (context, state) {
+          return CustomElevatedButton.expanded(
+            loading: state.sendOTPState.isLoading,
+            text: 'Send Code',
+            enabled: state.status.isValidated,
+            onPressed: () {
+              context.read<SmsActivationCubit>().sendOTP();
+            },
+          );
+        },
+      ),
     );
   }
 }
