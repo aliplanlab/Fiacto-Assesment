@@ -9,7 +9,6 @@ import 'package:fiacto/widgets/custom_pinput.dart';
 import 'package:fiacto/widgets/custom_title_subtitle.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
 
 class AuthenticatorActivationView extends StatelessWidget {
   const AuthenticatorActivationView({super.key});
@@ -77,21 +76,7 @@ class AuthenticatorActivationView extends StatelessWidget {
                 style: context.fourteen400.withColor(context.grey500),
               ),
               const SizedBox(height: 24),
-              BlocBuilder<
-                AuthenticatorActivationCubit,
-                AuthenticatorActivationState
-              >(
-                buildWhen: (previous, current) => previous.code != current.code,
-                builder: (context, state) {
-                  return CustomPinputWidget(
-                    onChanged: (p0) {
-                      context
-                          .read<AuthenticatorActivationCubit>()
-                          .updateAuthenticatorCode(p0);
-                    },
-                  );
-                },
-              ),
+              _AuthCodeField(),
               const SizedBox(height: 24),
               Text(
                 'The code refreshes every 30 seconds',
@@ -107,6 +92,33 @@ class AuthenticatorActivationView extends StatelessWidget {
   }
 }
 
+class _AuthCodeField extends StatelessWidget {
+  const _AuthCodeField();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<
+      AuthenticatorActivationCubit,
+      AuthenticatorActivationState
+    >(
+      buildWhen:
+          (previous, current) =>
+              previous.code != current.code ||
+              previous.status != current.status,
+      builder: (context, state) {
+        return CustomPinputWidget(
+          length: 6,
+          onChanged: (p0) {
+            context
+                .read<AuthenticatorActivationCubit>()
+                .updateAuthenticatorCode(p0);
+          },
+        );
+      },
+    );
+  }
+}
+
 class _VerifyAndEnableButton extends StatelessWidget {
   const _VerifyAndEnableButton();
 
@@ -114,17 +126,21 @@ class _VerifyAndEnableButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
+        //If Code verified then We update the MFA status to authenticator
         BlocListener<
           AuthenticatorActivationCubit,
           AuthenticatorActivationState
         >(
           listenWhen:
               (previous, current) =>
-                  previous.activationDataState != current.activationDataState,
+                  previous.authenticatorActivationDataState !=
+                  current.authenticatorActivationDataState,
           listener: (context, state) {
-            if (state.activationDataState.isFailure) {
-              context.errorSnackbar(state.activationDataState.errorMessage);
-            } else if (state.activationDataState.isLoaded) {
+            if (state.authenticatorActivationDataState.isFailure) {
+              context.errorSnackbar(
+                state.authenticatorActivationDataState.errorMessage,
+              );
+            } else if (state.authenticatorActivationDataState.isLoaded) {
               context.read<AuthenticatorActivationCubit>().updateMFAStatus();
             }
           },
@@ -184,16 +200,18 @@ class _VerifyAndEnableButton extends StatelessWidget {
         buildWhen:
             (previous, current) =>
                 previous.status != current.status ||
-                previous.activationDataState != current.activationDataState,
+                previous.authenticatorActivationDataState !=
+                    current.authenticatorActivationDataState ||
+                previous.code != current.code,
         builder: (context, state) {
           return CustomElevatedButton.expanded(
             text: 'Verify & Enable 2FA',
-            enabled: state.status.isValidated,
-            loading: state.activationDataState.isLoading,
+            enabled: state.code.value.length == 6,
+            loading: state.authenticatorActivationDataState.isLoading,
             onPressed: () {
               context
                   .read<AuthenticatorActivationCubit>()
-                  .veridyAuthenticatorCode();
+                  .verifyAuthenticatorCode();
             },
           );
         },

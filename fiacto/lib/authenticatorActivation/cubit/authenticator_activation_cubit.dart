@@ -86,12 +86,13 @@ class AuthenticatorActivationCubit extends Cubit<AuthenticatorActivationState> {
     }
   }
 
-  Future<void> veridyAuthenticatorCode() async {
+  Future<void> verifyAuthenticatorCode() async {
     if (!state.status.isValidated) return;
     emit(
       state.copyWith(
         status: FormzStatus.submissionInProgress,
-        activationDataState: state.activationDataState.toLoading(),
+        authenticatorActivationDataState:
+            state.authenticatorActivationDataState.toLoading(),
       ),
     );
 
@@ -100,34 +101,36 @@ class AuthenticatorActivationCubit extends Cubit<AuthenticatorActivationState> {
       emit(
         state.copyWith(
           status: FormzStatus.submissionSuccess,
-          activationDataState: state.activationDataState.toLoaded(data: data),
+          authenticatorActivationDataState: state
+              .authenticatorActivationDataState
+              .toLoaded(data: data),
         ),
       );
     } on InternalServerException catch (error) {
       emit(
         state.copyWith(
           status: FormzStatus.submissionFailure,
-          activationDataState: state.activationDataState.toFailure(
-            error: error,
-          ),
+          authenticatorActivationDataState: state
+              .authenticatorActivationDataState
+              .toFailure(error: error),
         ),
       );
     } on BadRequestException catch (_) {
       emit(
         state.copyWith(
           status: FormzStatus.submissionFailure,
-          activationDataState: state.activationDataState.toFailure(
-            error: 'Invalid Code',
-          ),
+          authenticatorActivationDataState: state
+              .authenticatorActivationDataState
+              .toFailure(error: 'Invalid Code'),
         ),
       );
     } catch (error) {
       emit(
         state.copyWith(
           status: FormzStatus.submissionFailure,
-          activationDataState: state.activationDataState.toFailure(
-            error: error,
-          ),
+          authenticatorActivationDataState: state
+              .authenticatorActivationDataState
+              .toFailure(error: error),
         ),
       );
     }

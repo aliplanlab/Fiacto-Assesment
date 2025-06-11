@@ -8,7 +8,7 @@ typedef BuilderUpdateDataSate = DataState<void>;
 class AuthenticatorActivationState extends Equatable {
   final General code;
   final FormzStatus status;
-  final AuthenticatorActivationDataState activationDataState;
+  final AuthenticatorActivationDataState authenticatorActivationDataState;
   final AuthenticatorDataSate qrImageState;
   final AuthenticatorDataSate secretKeyState;
   final BuilderUpdateDataSate builderUpdateDataState;
@@ -16,7 +16,7 @@ class AuthenticatorActivationState extends Equatable {
   const AuthenticatorActivationState({
     this.code = const General.pure(),
     this.status = FormzStatus.pure,
-    this.activationDataState = const DataState(),
+    this.authenticatorActivationDataState = const DataState(),
     this.qrImageState = const DataState(),
     this.secretKeyState = const DataState(),
     this.builderUpdateDataState = const DataState(),
@@ -26,7 +26,7 @@ class AuthenticatorActivationState extends Equatable {
   List<Object?> get props => [
     code,
     status,
-    activationDataState,
+    authenticatorActivationDataState,
     qrImageState,
     secretKeyState,
     builderUpdateDataState,
@@ -35,7 +35,7 @@ class AuthenticatorActivationState extends Equatable {
   AuthenticatorActivationState copyWith({
     General? code,
     FormzStatus? status,
-    AuthenticatorActivationDataState? activationDataState,
+    AuthenticatorActivationDataState? authenticatorActivationDataState,
     AuthenticatorDataSate? qrImageState,
     AuthenticatorDataSate? secretKeyState,
     BuilderUpdateDataSate? builderUpdateDataState,
@@ -45,7 +45,9 @@ class AuthenticatorActivationState extends Equatable {
       status: status ?? this.status,
       qrImageState: qrImageState ?? this.qrImageState,
       secretKeyState: secretKeyState ?? this.secretKeyState,
-      activationDataState: activationDataState ?? this.activationDataState,
+      authenticatorActivationDataState:
+          authenticatorActivationDataState ??
+          this.authenticatorActivationDataState,
       builderUpdateDataState:
           builderUpdateDataState ?? this.builderUpdateDataState,
     );

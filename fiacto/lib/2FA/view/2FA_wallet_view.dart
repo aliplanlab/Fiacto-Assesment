@@ -61,10 +61,11 @@ class _SMSVerificationButton extends StatelessWidget {
       text: 'SMS Verification',
       borderRadius: 10,
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => const SmsActivationPage()),
-        );
+        context.go(SmsActivationPage.route());
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (_) => const SmsActivationPage()),
+        // );
       },
     );
   }

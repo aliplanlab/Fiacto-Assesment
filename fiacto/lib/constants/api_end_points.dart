@@ -8,4 +8,6 @@ class ApiEndpoints {
   static const authenticatorQrSecretGenerate = 'two-factor-auth/qr/secret';
   static const authenticatorCodeVerify = 'two-factor-auth/qr/verify';
   static const builderUserUpdate = 'builder-user/update';
+  static const sendPhoneOtp = 'pinpoint/send-otp';
+  static const verifyPhoneOtp = 'pinpoint/validate';
 }
