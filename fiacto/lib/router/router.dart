@@ -81,9 +81,15 @@ class AppRouter {
                    //    return VerifyEmailAddressPage.route();
                    //  } else
 
-                   if (!
-                   (user.isTwoFactorPhoneComplete ||user.isTwoFactorAuthenticatorComplete)) {
-                     return TwoFAWalletPage.route();
+                   if (!(user.isTwoFactorPhoneComplete ||
+                       user.isTwoFactorAuthenticatorComplete)) {
+                     final goingTo2FPage =
+                         state.matches(SmsActivationPage.route()) ||
+                         state.matches(AuthenticatorActivationPage.route());
+
+                     if (!goingTo2FPage) {
+                       return TwoFAWalletPage.route();
+                     }
                    } else if (loading || loggingIn || loggedIn) {
                      if (state.matches('/tab')) {
                        return null;
