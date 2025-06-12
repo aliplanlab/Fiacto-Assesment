@@ -123,18 +123,8 @@ class _LoginButton extends StatelessWidget {
           (previous, current) =>
               previous.loginDataState != current.loginDataState,
       listener: (context, state) {
-        if (state.loginDataState.isLoaded) {
-          context.successSnackbar('Login Successfully');
-          final user = state.loginDataState.data;
-          if (user != null && state.loginDataState.data != null) {
-            context.read<AuthRepository>().updateUser(User.fromEntity(user));
-          }
-          Future.delayed(const Duration(seconds: 2), () {
-            // Navigator.push(
-            //   context,
-            //   MaterialPageRoute(builder: (_) => const VerficiationPage()),
-            // );
-          });
+        if (state.isLoginSuccessFull) {
+          _checkUserStatus(context, state.user);
         } else if (state.loginDataState.isFailure) {
           context.errorSnackbar(state.loginDataState.errorMessage);
         }
@@ -211,4 +201,50 @@ class _RememberMe extends StatelessWidget {
       },
     );
   }
+}
+
+void _checkUserStatus(BuildContext context, UserEntity userEntity) {
+  final user = User.fromEntity(userEntity);
+
+  if (user.isTwoFactorAuthenticatorComplete || user.isTwoFactorPhoneComplete) {
+    context.read<AuthCubit>().updateUser(userEntity);
+    if (user.isTwoFactorAuthenticatorComplete &&
+        user.isTwoFactorPhoneComplete) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(builder: (_) => const TwoFAWalletPage()),
+      );
+    } else if (user.isTwoFactorPhoneComplete) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const LoginPhoneVerificationPage(),
+        ),
+      );
+    } else if (user.isTwoFactorAuthenticatorComplete) {
+      Navigator.push(
+        context,
+        MaterialPageRoute<void>(
+          builder: (_) => const LoginAuthenticatorVerificationPage(),
+        ),
+      );
+    }
+  } else {
+    context.read<AuthRepository>().updateUser(user);
+  }
+}
+
+Future<void> _showVerificationSentDialog(
+  BuildContext context,
+  UserEntity user,
+) async {
+  CustomAlertDialog.show(
+    context: context,
+    title: 'Verification Code Sent!',
+    subTitle:
+        'An email has been sent to your address with your verification OTP.',
+  );
+  await Future<void>.delayed(const Duration(seconds: 2));
+  if (!context.mounted) return;
+  Navigator.of(context).pop(); // Close the first dialog
 }
