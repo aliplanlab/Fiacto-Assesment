@@ -1,4 +1,5 @@
 import 'package:common/auth/api/entity/entity.dart';
+import 'package:common/common.dart';
 import 'package:common/http/data_state.dart';
 import 'package:common/validators/email.dart';
 import 'package:common/validators/password.dart';
@@ -52,4 +53,11 @@ class LoginState extends Equatable {
   }
 
   List<FormzInput<dynamic, dynamic>> get inputs => [email, password];
+
+  bool get isLoginSuccessFull =>
+      loginDataState.isLoaded &&
+      loginDataState.data != null &&
+      loginDataState.data!.token!.notBlank != null;
+
+  UserEntity get user => loginDataState.data ?? UserEntity();
 }

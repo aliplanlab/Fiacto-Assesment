@@ -17,9 +17,23 @@ class _BodyView extends StatelessWidget {
     final currencyRatesList = CurrencyRate.rates;
     final transactionHistory = TransactionModel.transactions;
     return Scaffold(
+      drawer: const CustomDrawer(),
+
       appBar: DrawerCustomAppBar(
+        drawer: Builder(
+          builder: (context) {
+            return InkWell(
+              onTap: () {
+                Scaffold.of(context).openDrawer();
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(12.0),
+                child: AssetIcon.monotone(AssetIcons.menu),
+              ),
+            );
+          },
+        ),
         titleWidget: Image.asset('assets/images/logo.png', width: 100),
-        onDrawerTap: () {},
         onNotificationTap: () {},
         onProfileTap: () {},
       ),
@@ -468,14 +482,14 @@ class _TransactionsListTile extends StatelessWidget {
 
 class DrawerCustomAppBar extends StatelessWidget
     implements PreferredSizeWidget {
-  final VoidCallback onDrawerTap;
+  final Widget drawer;
   final VoidCallback onNotificationTap;
   final VoidCallback onProfileTap;
   final Widget? titleWidget;
 
   const DrawerCustomAppBar({
     super.key,
-    required this.onDrawerTap,
+    required this.drawer,
     required this.onNotificationTap,
     required this.onProfileTap,
     this.titleWidget,
@@ -489,13 +503,7 @@ class DrawerCustomAppBar extends StatelessWidget
       automaticallyImplyLeading: false,
       centerTitle: true,
       title: titleWidget ?? const SizedBox(),
-      leading: GestureDetector(
-        onTap: onDrawerTap,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: AssetIcon.multicolor(AssetIcons.drawer, size: 30),
-        ),
-      ),
+      leading: drawer,
       actions: [
         IconButton(
           onPressed: onNotificationTap,
