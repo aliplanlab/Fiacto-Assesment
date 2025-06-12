@@ -206,6 +206,8 @@ class _SendCodeButton extends StatelessWidget {
                   ),
             ),
           );
+        } else if (state.sendOTPState.isFailure) {
+          context.errorSnackbar(state.sendOTPState.errorMessage);
         }
       },
       child: BlocBuilder<SmsActivationCubit, SmsActivationState>(
