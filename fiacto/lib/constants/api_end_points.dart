@@ -10,5 +10,6 @@ class ApiEndpoints {
   static const builderUserUpdate = 'builder-user/update';
   static const sendPhoneOtp = 'pinpoint/send-otp';
   static const verifyPhoneOtp = 'pinpoint/validate';
-
+  static const googleLogin = 'mobile/google-login';
+  static const googleSignUp = 'mobile/google-signup';
 }

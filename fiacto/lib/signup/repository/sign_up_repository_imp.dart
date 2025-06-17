@@ -56,4 +56,23 @@ class SignUpRepositoryImp extends SignUpRepository {
               )!,
         );
   }
+
+  @override
+  Future<UserEntity> googleSignUp(String email) async {
+    return httpClient
+        .post<JsonObject>(
+          path: ApiEndpoints.googleSignUp,
+          body: {'email': email, 'user_type': 'builder'},
+        )
+        .then(
+          (json) =>
+              $mapIt(
+                json,
+                (e) => UserEntity.fromJson(
+                  e['data']['user'] as JsonObject,
+                  e['data']['token'] as String,
+                ),
+              )!,
+        );
+  }
 }

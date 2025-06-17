@@ -6,53 +6,97 @@ class LoginView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                SizedBox(height: 40),
-                Image.asset('assets/images/logo_circle.png', height: 60),
-                SizedBox(height: 24),
-                Text('Get Started Now', style: context.twenty600),
-                SizedBox(height: 8),
-                Text(
-                  'Create an account or log in to explore about our app',
-                  style: context.fourteen400.withColor(context.grey500),
-                  textAlign: TextAlign.center,
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<LoginCubit, LoginState>(
+            listenWhen:
+                (previous, current) =>
+                    previous.loginDataState != current.loginDataState,
+            listener: (context, state) {
+              if (state.isLoginSuccessFull) {
+                _checkUserStatus(context, state.user);
+              } else if (state.loginDataState.isFailure) {
+                context.errorSnackbar(state.loginDataState.errorMessage);
+              }
+            },
+          ),
+          BlocListener<LoginCubit, LoginState>(
+            listenWhen:
+                (previous, current) =>
+                    previous.socialLoginDataState != current.socialLoginDataState,
+            listener: (context, state) {
+              if (state.isSocialLoginSuccessFull) {
+                context.read<AuthCubit>().updateUser(state.user);
+                _checkUserStatus(context, state.user);
+              } else if (state.socialLoginDataState.isFailure) {
+                context.errorSnackbar(state.socialLoginDataState.errorMessage);
+              }
+            },
+          ),
+        ],
+        child: _BodyView(),
+      ),
+    );
+  }
+}
+
+class _BodyView extends StatelessWidget {
+  const _BodyView();
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              SizedBox(height: 40),
+              Image.asset('assets/images/logo_circle.png', height: 60),
+              SizedBox(height: 24),
+              Text('Get Started Now', style: context.twenty600),
+              SizedBox(height: 8),
+              Text(
+                'Create an account or log in to explore about our app',
+                style: context.fourteen400.withColor(context.grey500),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 24),
+              _EmailTextField(),
+              SizedBox(height: 16),
+              _PasswordTextField(),
+              SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [_RememberMe(), _ForgotPassword()],
+              ),
+              SizedBox(height: 24),
+              _LoginButton(),
+              SizedBox(height: 24),
+              _ContinueWithGoogle(),
+              SizedBox(height: 16),
+              _ContinueWithApple(),
+              SizedBox(height: 16),
+              _ContinueWithFacebook(),
+              SizedBox(height: 16),
+              RichTextWidget(
+                title: "Don't have an account? ",
+                colorTitle: 'Create One',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SignUpPage()),
+                  );
+                },
+                titleStyle: context.fourteen500.withColor(context.grey500),
+                colorTitleStyle: context.fourteen500.withColor(
+                  context.primary500,
                 ),
-                SizedBox(height: 24),
-                _EmailTextField(),
-                SizedBox(height: 16),
-                _PasswordTextField(),
-                SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [_RememberMe(), _ForgotPassword()],
-                ),
-                SizedBox(height: 24),
-                _LoginButton(),
-                SizedBox(height: MediaQuery.of(context).size.height * 0.28),
-                RichTextWidget(
-                  title: "Don't have an account? ",
-                  colorTitle: 'Create One',
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SignUpPage()),
-                    );
-                  },
-                  titleStyle: context.fourteen500.withColor(context.grey500),
-                  colorTitleStyle: context.fourteen500.withColor(
-                    context.primary500,
-                  ),
-                ),
-                SizedBox(height: 24),
-              ],
-            ),
+              ),
+              SizedBox(height: 24),
+            ],
           ),
         ),
       ),
@@ -118,33 +162,21 @@ class _LoginButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LoginCubit, LoginState>(
-      listenWhen:
+    return BlocBuilder<LoginCubit, LoginState>(
+      buildWhen:
           (previous, current) =>
+              previous.status != current.status ||
               previous.loginDataState != current.loginDataState,
-      listener: (context, state) {
-        if (state.isLoginSuccessFull) {
-          _checkUserStatus(context, state.user);
-        } else if (state.loginDataState.isFailure) {
-          context.errorSnackbar(state.loginDataState.errorMessage);
-        }
+      builder: (context, state) {
+        return CustomElevatedButton.expanded(
+          enabled: state.status.isValidated,
+          loading: state.loginDataState.isLoading,
+          onPressed: () {
+            context.read<LoginCubit>().loginWithEmailPassword();
+          },
+          text: 'Login',
+        );
       },
-      child: BlocBuilder<LoginCubit, LoginState>(
-        buildWhen:
-            (previous, current) =>
-                previous.status != current.status ||
-                previous.loginDataState != current.loginDataState,
-        builder: (context, state) {
-          return CustomElevatedButton.expanded(
-            enabled: state.status.isValidated,
-            loading: state.loginDataState.isLoading,
-            onPressed: () {
-              context.read<LoginCubit>().loginWithEmailPassword();
-            },
-            text: 'Login',
-          );
-        },
-      ),
     );
   }
 }
@@ -199,6 +231,76 @@ class _RememberMe extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ContinueWithFacebook extends StatelessWidget {
+  const _ContinueWithFacebook();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomOutlinedButton(
+      onPressed: () {},
+      // loading:
+      //     socialSignUpDataState.key == 'google' &&
+      //     socialSignUpDataState.isLoading,
+      // enabled:
+      //     socialSignUpDataState.isInitial || socialSignUpDataState.isFailure,
+      borderRadius: 4.0,
+      width: double.infinity,
+      leading: const AssetIcon.multicolor(AssetIcons.facebook_icon),
+      text: 'Continue with Facebook',
+    );
+  }
+}
+
+class _ContinueWithGoogle extends StatelessWidget {
+  const _ContinueWithGoogle();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<LoginCubit, LoginState>(
+      buildWhen:
+          (previous, current) =>
+              previous.socialLoginDataState != current.socialLoginDataState,
+      builder: (context, state) {
+        return CustomOutlinedButton(
+          onPressed: () {
+            context.read<LoginCubit>().loginWithGoogle();
+          },
+          loading:
+              state.socialLoginDataState.key == 'google' &&
+              state.socialLoginDataState.isLoading,
+          enabled:
+              state.socialLoginDataState.isInitial ||
+              state.socialLoginDataState.isFailure,
+          borderRadius: 4.0,
+          width: double.infinity,
+          leading: const AssetIcon.multicolor(AssetIcons.google_icon),
+          text: 'Continue with Google',
+        );
+      },
+    );
+  }
+}
+
+class _ContinueWithApple extends StatelessWidget {
+  const _ContinueWithApple();
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomOutlinedButton(
+      onPressed: () {},
+      // loading:
+      //     socialSignUpDataState.key == 'google' &&
+      //     socialSignUpDataState.isLoading,
+      // enabled:
+      //     socialSignUpDataState.isInitial || socialSignUpDataState.isFailure,
+      borderRadius: 4.0,
+      width: double.infinity,
+      leading: const AssetIcon.multicolor(AssetIcons.apple_icon),
+      text: 'Continue with Apple',
     );
   }
 }

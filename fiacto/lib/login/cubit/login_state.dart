@@ -1,12 +1,9 @@
-import 'package:common/auth/api/entity/entity.dart';
 import 'package:common/common.dart';
-import 'package:common/http/data_state.dart';
-import 'package:common/validators/email.dart';
-import 'package:common/validators/password.dart';
 import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 
 typedef LoginDataState = DataState<UserEntity>;
+typedef SocialLoginDataState = DataState<UserEntity>;
 
 class LoginState extends Equatable {
   const LoginState({
@@ -16,6 +13,7 @@ class LoginState extends Equatable {
     this.isCheck = false,
     this.status = FormzStatus.pure,
     this.loginDataState = const LoginDataState(),
+    this.socialLoginDataState = const DataState(),
   });
   final Password password;
   final bool isVisible;
@@ -23,6 +21,7 @@ class LoginState extends Equatable {
   final bool isCheck;
   final FormzStatus status;
   final LoginDataState loginDataState;
+  final SocialLoginDataState socialLoginDataState;
 
   @override
   List<Object?> get props => [
@@ -32,6 +31,7 @@ class LoginState extends Equatable {
     isCheck,
     status,
     loginDataState,
+    socialLoginDataState,
   ];
 
   LoginState copyWith({
@@ -41,6 +41,7 @@ class LoginState extends Equatable {
     bool? isCheck,
     FormzStatus? status,
     LoginDataState? loginDataState,
+    SocialLoginDataState? socialLoginDataState,
   }) {
     return LoginState(
       email: email ?? this.email,
@@ -49,6 +50,7 @@ class LoginState extends Equatable {
       isCheck: isCheck ?? this.isCheck,
       status: status ?? this.status,
       loginDataState: loginDataState ?? this.loginDataState,
+      socialLoginDataState: socialLoginDataState ?? this.socialLoginDataState,
     );
   }
 
@@ -58,6 +60,11 @@ class LoginState extends Equatable {
       loginDataState.isLoaded &&
       loginDataState.data != null &&
       loginDataState.data!.token!.notBlank != null;
+
+  bool get isSocialLoginSuccessFull =>
+      socialLoginDataState.isLoaded &&
+      socialLoginDataState.data != null &&
+      socialLoginDataState.data!.token!.notBlank != null;
 
   UserEntity get user => loginDataState.data ?? UserEntity();
 }

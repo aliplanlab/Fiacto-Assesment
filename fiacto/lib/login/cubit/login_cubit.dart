@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:common/common.dart';
 import 'package:common/http/http_exception.dart';
 import 'package:common/validators/email.dart';
 import 'package:common/validators/password.dart';
@@ -5,6 +8,7 @@ import 'package:fiacto/login/cubit/login_state.dart';
 import 'package:fiacto/login/repository/repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit({required this.loginRepository}) : super(const LoginState());
@@ -83,6 +87,59 @@ class LoginCubit extends Cubit<LoginState> {
         state.copyWith(
           status: FormzStatus.submissionFailure,
           loginDataState: state.loginDataState.toFailure(error: error),
+        ),
+      );
+    }
+  }
+
+  Future<void> loginWithGoogle() async {
+    emit(
+      state.copyWith(
+        socialLoginDataState: state.socialLoginDataState.toLoading(
+          key: 'google',
+        ),
+      ),
+    );
+
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId:
+            Platform.isIOS
+                ? '502732760713-rk6gsqooougm0c1kgjrq0fequ840hqvq.apps.googleusercontent.com'
+                : null,
+        scopes: ['email'],
+      );
+      await googleSignIn.signOut();
+      final GoogleSignInAccount? user = await googleSignIn.signIn();
+      if (user != null) {
+        $debugLog(user.email);
+        _googleLogin(user.email);
+      } else {
+        emit(state.copyWith(socialLoginDataState: const DataState.initial()));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          socialLoginDataState: state.socialLoginDataState.toFailure(
+            error: e.toString(),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> _googleLogin(String email) async {
+    try {
+      final data = await loginRepository.googleLogin(email);
+      emit(
+        state.copyWith(
+          socialLoginDataState: state.socialLoginDataState.toLoaded(data: data),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          socialLoginDataState: state.socialLoginDataState.toFailure(error: e),
         ),
       );
     }

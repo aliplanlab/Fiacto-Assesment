@@ -12,4 +12,7 @@ abstract class SignUpRepository {
     required String token,
     required String id,
   });
+
+    Future<UserEntity> googleSignUp(String email);
+
 }

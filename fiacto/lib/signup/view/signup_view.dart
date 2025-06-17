@@ -1,7 +1,67 @@
 part of 'view.dart';
 
-class SignupView extends StatelessWidget {
-  const SignupView({super.key});
+class SignUpView extends StatelessWidget {
+  const SignUpView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SignUpCubit, SignUpState>(
+          listenWhen:
+              (previous, current) =>
+                  previous.signUpDataState != current.signUpDataState,
+          listener: (context, state) {
+            if (state.signUpDataState.isFailure) {
+              context.errorSnackbar(state.signUpDataState.errorMessage);
+            } else if (state.signUpDataState.isLoaded) {
+              _showVerificationSentDialog(context, state.signUpDataState.data!);
+            }
+          },
+        ),
+
+        BlocListener<SignUpCubit, SignUpState>(
+          listenWhen:
+              (previous, current) =>
+                  previous.socialSignUpDataState !=
+                  current.socialSignUpDataState,
+          listener: (context, state) {
+            if (state.socialSignUpDataState.isLoaded) {
+              final user = state.socialSignUpDataState.data;
+              if (user != null && user.token?.notBlank != null) {
+                context.read<AuthRepository>().updateUser(
+                  User.fromEntity(user),
+                );
+              }
+            } else if (state.socialSignUpDataState.isFailure) {
+              context.errorSnackbar(state.socialSignUpDataState.errorMessage);
+            }
+          },
+        ),
+      ],
+      child: const _BodyView(),
+    );
+  }
+}
+
+Future<void> _showVerificationSentDialog(
+  BuildContext context,
+  UserEntity user,
+) async {
+  CustomAlertDialog.show(
+    context: context,
+    title: 'Verification Link Sent!',
+    subTitle:
+        'An email has been sent to your address with your verification Link.',
+  );
+  await Future<void>.delayed(const Duration(seconds: 2));
+  if (!context.mounted) return;
+  Navigator.of(context).pop();
+  context.read<AuthRepository>().updateUser(User.fromEntity(user));
+}
+
+class _BodyView extends StatelessWidget {
+  const _BodyView();
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +91,12 @@ class SignupView extends StatelessWidget {
               SizedBox(height: 16),
               _EmailField(),
               SizedBox(height: 16),
-              _PhoneNumberField(),
-              SizedBox(height: 16),
               _PasswordField(),
               SizedBox(height: 16),
-              _ConfirmPasswordField(),
-              SizedBox(height: 30),
               _ContinueButton(),
               SizedBox(height: 24),
+              _ContinueWithGoogle(),
+              SizedBox(height: 16),
             ],
           ),
         ),
@@ -87,26 +145,26 @@ class _EmailField extends StatelessWidget {
   }
 }
 
-class _PhoneNumberField extends StatelessWidget {
-  const _PhoneNumberField();
+// class _PhoneNumberField extends StatelessWidget {
+//   const _PhoneNumberField();
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen:
-          (previous, current) => previous.phoneNumber != current.phoneNumber,
-      builder: (context, state) {
-        return CustomTextFormField(
-          labelText: 'Phone Number',
-          hintText: 'Enter Your Phone Number',
-          onChanged: (value) {
-            context.read<SignUpCubit>().phoneNumber(value);
-          },
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<SignUpCubit, SignUpState>(
+//       buildWhen:
+//           (previous, current) => previous.phoneNumber != current.phoneNumber,
+//       builder: (context, state) {
+//         return CustomTextFormField(
+//           labelText: 'Phone Number',
+//           hintText: 'Enter Your Phone Number',
+//           onChanged: (value) {
+//             context.read<SignUpCubit>().phoneNumber(value);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class _PasswordField extends StatelessWidget {
   const _PasswordField();
@@ -141,77 +199,61 @@ class _PasswordField extends StatelessWidget {
   }
 }
 
-class _ConfirmPasswordField extends StatelessWidget {
-  const _ConfirmPasswordField();
+// class _ConfirmPasswordField extends StatelessWidget {
+//   const _ConfirmPasswordField();
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<SignUpCubit, SignUpState>(
-      buildWhen:
-          (previous, current) =>
-              previous.confirmPassword != current.confirmPassword ||
-              previous.confirmPasswordVisible != current.confirmPasswordVisible,
-      builder: (context, state) {
-        return CustomTextFormField(
-          labelText: 'Confirm Password',
-          hintText: '************',
-          obscureText: !state.confirmPasswordVisible,
-          suffixIcon: InkWell(
-            onTap: () {
-              context.read<SignUpCubit>().confirmPasswordVisible(
-                !state.confirmPasswordVisible,
-              );
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Image.asset('assets/icons/visibility.png'),
-            ),
-          ),
-          onChanged: (value) {
-            context.read<SignUpCubit>().confirmPasswordChanged(value);
-          },
-        );
-      },
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocBuilder<SignUpCubit, SignUpState>(
+//       buildWhen:
+//           (previous, current) =>
+//               previous.confirmPassword != current.confirmPassword ||
+//               previous.confirmPasswordVisible != current.confirmPasswordVisible,
+//       builder: (context, state) {
+//         return CustomTextFormField(
+//           labelText: 'Confirm Password',
+//           hintText: '************',
+//           obscureText: !state.confirmPasswordVisible,
+//           suffixIcon: InkWell(
+//             onTap: () {
+//               context.read<SignUpCubit>().confirmPasswordVisible(
+//                 !state.confirmPasswordVisible,
+//               );
+//             },
+//             child: Padding(
+//               padding: const EdgeInsets.all(12.0),
+//               child: Image.asset('assets/icons/visibility.png'),
+//             ),
+//           ),
+//           onChanged: (value) {
+//             context.read<SignUpCubit>().confirmPasswordChanged(value);
+//           },
+//         );
+//       },
+//     );
+//   }
+// }
 
 class _ContinueButton extends StatelessWidget {
   const _ContinueButton();
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SignUpCubit, SignUpState>(
-      listenWhen:
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen:
           (previous, current) =>
+              previous.isValidated != current.isValidated ||
               previous.signUpDataState != current.signUpDataState,
-      listener: (context, state) {
-        if (state.signUpDataState.isLoaded) {
-          context.successSnackbar('User Created Successfully');
-          final user = state.signUpDataState.data;
-          if (user != null && state.signUpDataState.data != null) {
-            context.read<AuthRepository>().updateUser(User.fromEntity(user));
-          }
-        } else if (state.signUpDataState.isFailure) {
-          context.errorSnackbar(state.signUpDataState.errorMessage);
-        }
+      builder: (context, state) {
+        return CustomElevatedButton.expanded(
+          loading: state.signUpDataState.isLoading,
+          enabled: state.isValidated,
+          onPressed: () {
+            context.read<SignUpCubit>().signUpWithEmail();
+          },
+          text: 'Continue',
+        );
       },
-      child: BlocBuilder<SignUpCubit, SignUpState>(
-        buildWhen:
-            (previous, current) =>
-                previous.isValidated != current.isValidated ||
-                previous.signUpDataState != current.signUpDataState,
-        builder: (context, state) {
-          return CustomElevatedButton.expanded(
-            loading: state.signUpDataState.isLoading,
-            enabled: state.isValidated,
-            onPressed: () {
-              context.read<SignUpCubit>().signUpWithEmail();
-            },
-            text: 'Continue',
-          );
-        },
-      ),
     );
   }
 }
@@ -238,6 +280,36 @@ class BackButton extends StatelessWidget {
           child: Icon(Icons.arrow_back_ios_new, size: 18, color: Colors.black),
         ),
       ),
+    );
+  }
+}
+
+class _ContinueWithGoogle extends StatelessWidget {
+  const _ContinueWithGoogle();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SignUpCubit, SignUpState>(
+      buildWhen:
+          (previous, current) =>
+              previous.socialSignUpDataState != current.socialSignUpDataState,
+      builder: (context, state) {
+        return CustomOutlinedButton(
+          onPressed: () {
+            context.read<SignUpCubit>().signUpWithGoogle();
+          },
+          loading:
+              state.socialSignUpDataState.key == 'google' &&
+              state.socialSignUpDataState.isLoading,
+          enabled:
+              state.socialSignUpDataState.isInitial ||
+              state.socialSignUpDataState.isFailure,
+          borderRadius: 4.0,
+          width: double.infinity,
+          leading: const AssetIcon.multicolor(AssetIcons.google_icon),
+          text: 'Continue with Google',
+        );
+      },
     );
   }
 }

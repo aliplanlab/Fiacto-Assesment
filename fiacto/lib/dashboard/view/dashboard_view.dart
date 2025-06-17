@@ -18,7 +18,6 @@ class _BodyView extends StatelessWidget {
     final transactionHistory = TransactionModel.transactions;
     return Scaffold(
       drawer: const CustomDrawer(),
-
       appBar: DrawerCustomAppBar(
         drawer: Builder(
           builder: (context) {
@@ -28,7 +27,7 @@ class _BodyView extends StatelessWidget {
               },
               child: const Padding(
                 padding: EdgeInsets.all(12.0),
-                child: AssetIcon.monotone(AssetIcons.menu),
+                child: Icon(Icons.menu),
               ),
             );
           },

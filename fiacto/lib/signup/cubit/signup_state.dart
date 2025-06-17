@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:formz/formz.dart';
 
 typedef SignUpDataState = DataState<UserEntity>;
+typedef SocialSignUpDataState = DataState<UserEntity>;
 
 class SignUpState extends Equatable {
   const SignUpState({
@@ -15,6 +16,7 @@ class SignUpState extends Equatable {
     this.passwordVisible = false,
     this.confirmPasswordVisible = false,
     this.signUpDataState = const SignUpDataState(),
+    this.socialSignUpDataState = const SocialSignUpDataState(),
   });
 
   final General fullName;
@@ -26,6 +28,7 @@ class SignUpState extends Equatable {
   final bool passwordVisible;
   final bool confirmPasswordVisible;
   final SignUpDataState signUpDataState;
+  final SocialSignUpDataState socialSignUpDataState;
 
   @override
   List<Object?> get props => [
@@ -38,6 +41,7 @@ class SignUpState extends Equatable {
     passwordVisible,
     confirmPasswordVisible,
     signUpDataState,
+    socialSignUpDataState,
   ];
 
   SignUpState copyWith({
@@ -50,6 +54,7 @@ class SignUpState extends Equatable {
     bool? passwordVisible,
     bool? confirmPasswordVisible,
     SignUpDataState? signUpDataState,
+    SocialSignUpDataState? socialSignUpDataState,
   }) {
     return SignUpState(
       fullName: fullName ?? this.fullName,
@@ -62,22 +67,18 @@ class SignUpState extends Equatable {
       confirmPasswordVisible:
           confirmPasswordVisible ?? this.confirmPasswordVisible,
       signUpDataState: signUpDataState ?? this.signUpDataState,
+      socialSignUpDataState:
+          socialSignUpDataState ?? this.socialSignUpDataState,
     );
   }
 
   bool get isValidated {
     final passwordValid = password.value.trim().isNotEmpty;
-    final confirmPasswordValid = confirmPassword.value.trim().isNotEmpty;
-
-    final passwordsMatch = password.value == confirmPassword.value;
-
-    return email.valid &&
-        fullName.valid &&
-        phoneNumber.valid &&
-        passwordValid &&
-        confirmPasswordValid &&
-        passwordsMatch;
+    return email.valid && fullName.valid && passwordValid;
   }
+
+  bool get isSignupSuccess =>
+      signUpDataState.isLoaded && signUpDataState.data != null;
 
   List<FormzInput<dynamic, dynamic>> get inputs => [
     fullName,

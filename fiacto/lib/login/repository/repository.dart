@@ -5,4 +5,6 @@ abstract class LoginRepository {
     required String email,
     required String password,
   });
+
+  Future<UserEntity> googleLogin(String email);
 }

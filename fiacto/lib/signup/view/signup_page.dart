@@ -14,7 +14,7 @@ class SignUpPage extends StatelessWidget {
               httpClient: context.read<HttpClient>(),
             ),
           ),
-      child: const SignupView(),
+      child: const SignUpView(),
     );
   }
 }

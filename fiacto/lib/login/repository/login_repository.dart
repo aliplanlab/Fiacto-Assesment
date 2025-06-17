@@ -28,4 +28,23 @@ class LoginRepositoryImp extends LoginRepository {
               )!,
         );
   }
+
+  @override
+  Future<UserEntity> googleLogin(String email) async {
+    return httpClient
+        .post<JsonObject>(
+          path: ApiEndpoints.googleLogin,
+          body: {'email': email, 'user_type': 'builder'},
+        )
+        .then(
+          (json) =>
+              $mapIt(
+                json,
+                (e) => UserEntity.fromJson(
+                  e['data']['user'] as JsonObject,
+                  e['data']['token'] as String,
+                ),
+              )!,
+        );
+  }
 }

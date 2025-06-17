@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:common/http/data_state.dart';
 import 'package:common/validators/email.dart';
 import 'package:common/validators/general.dart';
 import 'package:common/validators/phone_number.dart';
@@ -5,6 +8,7 @@ import 'package:fiacto/signup/cubit/signup_state.dart';
 import 'package:fiacto/signup/repository/repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class SignUpCubit extends Cubit<SignUpState> {
   SignUpCubit({required this.repository}) : super(const SignUpState());
@@ -126,6 +130,63 @@ class SignUpCubit extends Cubit<SignUpState> {
         state.copyWith(
           status: FormzStatus.submissionFailure,
           signUpDataState: state.signUpDataState.toFailure(error: error),
+        ),
+      );
+    }
+  }
+
+  Future<void> signUpWithGoogle() async {
+    emit(
+      state.copyWith(
+        socialSignUpDataState: state.socialSignUpDataState.toLoading(
+          key: 'google',
+        ),
+      ),
+    );
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        clientId:
+            Platform.isIOS
+                ? '502732760713-rk6gsqooougm0c1kgjrq0fequ840hqvq.apps.googleusercontent.com'
+                : null,
+        scopes: ['email'],
+      );
+      await googleSignIn.signOut();
+      final GoogleSignInAccount? user = await googleSignIn.signIn();
+      final email = user?.email ?? '';
+      //const email = 'mytest@gmail.com';
+      if (email.isNotEmpty) {
+        googleSignup(email);
+      } else {
+        emit(state.copyWith(socialSignUpDataState: const DataState.initial()));
+      }
+    } catch (e) {
+      emit(
+        state.copyWith(
+          socialSignUpDataState: state.socialSignUpDataState.toFailure(
+            error: e.toString(),
+          ),
+        ),
+      );
+    }
+  }
+
+  Future<void> googleSignup(String email) async {
+    try {
+      final data = await repository.googleSignUp(email);
+      emit(
+        state.copyWith(
+          socialSignUpDataState: state.socialSignUpDataState.toLoaded(
+            data: data,
+          ),
+        ),
+      );
+    } catch (e) {
+      emit(
+        state.copyWith(
+          socialSignUpDataState: state.socialSignUpDataState.toFailure(
+            error: e,
+          ),
         ),
       );
     }
